@@ -226,7 +226,7 @@ public class Sim extends CordovaPlugin {
       return false;
     }
   }
-
+/////////
   private void hasReadPermission() {
     this.callback.sendPluginResult(new PluginResult(PluginResult.Status.OK,
       simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
@@ -246,7 +246,28 @@ public class Sim extends CordovaPlugin {
   private void requestPermission(String type) {
     LOG.i(LOG_TAG, "requestPermission");
     if (!simPermissionGranted(type)) {
-      cordova.requestPermission(this, 12345, type);
+new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Permission required")
+                            .setMessage("Phone Access is required for this application to work ! ")
+                            .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                  cordova.requestPermission(MainActivity.this, 12345, type);
+                                }
+
+                            })
+                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                    finish();
+                                }
+                            })
+                            .show();
+
+
+
+     
     } else {
       this.callback.success();
     }
