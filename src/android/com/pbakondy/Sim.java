@@ -41,7 +41,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.Manifest;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
