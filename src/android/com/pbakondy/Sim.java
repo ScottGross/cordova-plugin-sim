@@ -245,15 +245,17 @@ public class Sim extends CordovaPlugin {
   }
 
   private void requestPermission(String type) {
-    LOG.i(LOG_TAG, "requestPermission");
     if (!simPermissionGranted(type)) {
-new AlertDialog.Builder(MainActivity.this)
+new AlertDialog.Builder(this.cordova.getActivity())
                             .setTitle("Permission required")
                             .setMessage("Phone Access is required for this application to work ! ")
                             .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                  cordova.requestPermission(MainActivity.this, 12345, type);
+                                  cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
+
+                             //this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
+           
                                 }
 
                             })
@@ -261,14 +263,10 @@ new AlertDialog.Builder(MainActivity.this)
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
-                                    finish();
+                                  //  finish();
                                 }
                             })
                             .show();
-
-
-
-     
     } else {
       this.callback.success();
     }
@@ -278,7 +276,8 @@ new AlertDialog.Builder(MainActivity.this)
   public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
   {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-      this.callback.success();
+       this.callback.sendPluginResult(new PluginResult(PluginResult.Status.OK,
+      simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
     } else {
       this.callback.error("Permission denied");
     }
