@@ -52,7 +52,6 @@ import java.util.List;
 public class Sim extends CordovaPlugin {
   private static final String LOG_TAG = "CordovaPluginSim";
 
-
   private static final String GET_SIM_INFO = "getSimInfo";
   private static final String HAS_READ_PERMISSION = "hasReadPermission";
   private static final String REQUEST_READ_PERMISSION = "requestReadPermission";
@@ -87,7 +86,8 @@ public class Sim extends CordovaPlugin {
 
           if (simPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
 
-            SubscriptionManager subscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
+            SubscriptionManager subscriptionManager = (SubscriptionManager) context
+                .getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
             activeSubscriptionInfoCount = subscriptionManager.getActiveSubscriptionInfoCount();
             activeSubscriptionInfoCountMax = subscriptionManager.getActiveSubscriptionInfoCountMax();
 
@@ -98,7 +98,7 @@ public class Sim extends CordovaPlugin {
 
               CharSequence carrierName = subscriptionInfo.getCarrierName();
               String countryIso = subscriptionInfo.getCountryIso();
-              int dataRoaming = subscriptionInfo.getDataRoaming();  // 1 is enabled ; 0 is disabled
+              int dataRoaming = subscriptionInfo.getDataRoaming(); // 1 is enabled ; 0 is disabled
               CharSequence displayName = subscriptionInfo.getDisplayName();
               String iccId = subscriptionInfo.getIccId();
               int mcc = subscriptionInfo.getMcc();
@@ -193,13 +193,13 @@ public class Sim extends CordovaPlugin {
       result.put("isNetworkRoaming", isNetworkRoaming);
 
       if (phoneCount != null) {
-        result.put("phoneCount", (int)phoneCount);
+        result.put("phoneCount", (int) phoneCount);
       }
       if (activeSubscriptionInfoCount != null) {
-        result.put("activeSubscriptionInfoCount", (int)activeSubscriptionInfoCount);
+        result.put("activeSubscriptionInfoCount", (int) activeSubscriptionInfoCount);
       }
       if (activeSubscriptionInfoCountMax != null) {
-        result.put("activeSubscriptionInfoCountMax", (int)activeSubscriptionInfoCountMax);
+        result.put("activeSubscriptionInfoCountMax", (int) activeSubscriptionInfoCountMax);
       }
 
       if (simPermissionGranted(Manifest.permission.READ_PHONE_STATE)) {
@@ -227,10 +227,11 @@ public class Sim extends CordovaPlugin {
       return false;
     }
   }
-/////////
+
+  /////////
   private void hasReadPermission() {
-    this.callback.sendPluginResult(new PluginResult(PluginResult.Status.OK,
-      simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
+    this.callback.sendPluginResult(
+        new PluginResult(PluginResult.Status.OK, simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
   }
 
   private void requestReadPermission() {
@@ -246,27 +247,25 @@ public class Sim extends CordovaPlugin {
 
   private void requestPermission(String type) {
     if (!simPermissionGranted(type)) {
-new AlertDialog.Builder(this.cordova.getActivity())
-                            .setTitle("Permission required")
-                            .setMessage("VIPR needs permission to access SIM data.  Click ""Allow"" on next prompt or the application will not work. The application will NOT make or manage phone calls. ")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                  cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
-                                }
-                            })
-                            .show();
+      new AlertDialog.Builder(this.cordova.getActivity()).setTitle("Permission required").setMessage(
+          "VIPR needs permission to access your SIM card Serial Number only. If this is your personal device and you pay for your data, click Deny on next prompt. Otherwise click accept on next prompt.")
+          .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
+            }
+          }).show();
     } else {
       this.callback.success();
     }
   }
 
   @Override
-  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) throws JSONException
-  {
+  public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults)
+      throws JSONException {
     if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-       this.callback.sendPluginResult(new PluginResult(PluginResult.Status.OK,
-      simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
+      this.callback.sendPluginResult(
+          new PluginResult(PluginResult.Status.OK, simPermissionGranted(Manifest.permission.READ_PHONE_STATE)));
     } else {
       this.callback.error("Permission denied");
     }
