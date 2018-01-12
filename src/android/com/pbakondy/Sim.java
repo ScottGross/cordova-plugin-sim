@@ -52,6 +52,7 @@ import java.util.List;
 public class Sim extends CordovaPlugin {
   private static final String LOG_TAG = "CordovaPluginSim";
 
+  
   private static final String GET_SIM_INFO = "getSimInfo";
   private static final String HAS_READ_PERMISSION = "hasReadPermission";
   private static final String REQUEST_READ_PERMISSION = "requestReadPermission";
@@ -253,6 +254,12 @@ public class Sim extends CordovaPlugin {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
+            }
+          }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+              dialog.cancel();
+              //  finish();
             }
           }).show();
     } else {
