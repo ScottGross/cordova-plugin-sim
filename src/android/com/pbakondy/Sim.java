@@ -255,13 +255,15 @@ public class Sim extends CordovaPlugin {
             public void onClick(DialogInterface dialog, int which) {
               cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
             }
-          }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+          })
+      /*    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
               dialog.cancel();
               //  finish();
             }
-          }).show();
+          })*/
+          .show();
     } else {
       this.callback.success();
     }
