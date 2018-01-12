@@ -248,22 +248,11 @@ public class Sim extends CordovaPlugin {
     if (!simPermissionGranted(type)) {
 new AlertDialog.Builder(this.cordova.getActivity())
                             .setTitle("Permission required")
-                            .setMessage("Phone Access is required for this application to work ! ")
-                            .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+                            .setMessage("VIPR needs permission to access SIM data.  Click ""Allow"" on next prompt or the application will not work. The application will NOT make or manage phone calls. ")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                   cordova.requestPermission(Sim.this, 12345, Manifest.permission.READ_PHONE_STATE);
-
-                             //this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, PERMISSION_DENIED_ERROR));
-           
-                                }
-
-                            })
-                            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.cancel();
-                                  //  finish();
                                 }
                             })
                             .show();
